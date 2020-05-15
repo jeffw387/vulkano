@@ -41,6 +41,7 @@ mod fence_signal;
 mod join;
 mod now;
 mod semaphore_signal;
+mod fence_future;
 
 /// Represents an event that will happen on the GPU in the future.
 ///
