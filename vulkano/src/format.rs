@@ -107,7 +107,7 @@ use std::{error, fmt, mem};
 
 use half::f16;
 
-use vk;
+use crate::vk;
 
 // TODO: add enumerations for color, depth, stencil and depthstencil formats
 
@@ -618,7 +618,7 @@ pub unsafe trait FormatDesc {
 
     fn format(&self) -> Format;
 
-    fn decode_clear_value(&self, Self::ClearValue) -> ClearValue;
+    fn decode_clear_value(&self, _: Self::ClearValue) -> ClearValue;
 }
 
 unsafe impl FormatDesc for Format {

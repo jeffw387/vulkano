@@ -97,9 +97,9 @@ pub use self::traits::CommandBuffer;
 pub use self::traits::CommandBufferExecError;
 pub use self::traits::CommandBufferExecFuture;
 
-use pipeline::depth_stencil::DynamicStencilValue;
-use pipeline::viewport::Scissor;
-use pipeline::viewport::Viewport;
+use crate::pipeline::depth_stencil::DynamicStencilValue;
+use crate::pipeline::viewport::Scissor;
+use crate::pipeline::viewport::Viewport;
 
 pub mod pool;
 pub mod submit;

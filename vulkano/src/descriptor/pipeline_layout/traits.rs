@@ -12,19 +12,19 @@ use std::error;
 use std::fmt;
 use std::sync::Arc;
 
-use descriptor::descriptor::DescriptorDesc;
-use descriptor::descriptor::DescriptorDescSupersetError;
-use descriptor::descriptor::ShaderStages;
-use descriptor::descriptor_set::DescriptorSetsCollection;
-use descriptor::descriptor_set::UnsafeDescriptorSetLayout;
-use descriptor::pipeline_layout::limits_check;
-use descriptor::pipeline_layout::PipelineLayout;
-use descriptor::pipeline_layout::PipelineLayoutCreationError;
-use descriptor::pipeline_layout::PipelineLayoutDescUnion;
-use descriptor::pipeline_layout::PipelineLayoutSys;
-use device::Device;
-use device::DeviceOwned;
-use SafeDeref;
+use crate::descriptor::descriptor::DescriptorDesc;
+use crate::descriptor::descriptor::DescriptorDescSupersetError;
+use crate::descriptor::descriptor::ShaderStages;
+use crate::descriptor::descriptor_set::DescriptorSetsCollection;
+use crate::descriptor::descriptor_set::UnsafeDescriptorSetLayout;
+use crate::descriptor::pipeline_layout::limits_check;
+use crate::descriptor::pipeline_layout::PipelineLayout;
+use crate::descriptor::pipeline_layout::PipelineLayoutCreationError;
+use crate::descriptor::pipeline_layout::PipelineLayoutDescUnion;
+use crate::descriptor::pipeline_layout::PipelineLayoutSys;
+use crate::device::Device;
+use crate::device::DeviceOwned;
+use crate::SafeDeref;
 
 /// Trait for objects that describe the layout of the descriptors and push constants of a pipeline.
 pub unsafe trait PipelineLayoutAbstract: PipelineLayoutDesc + DeviceOwned {
@@ -177,7 +177,7 @@ where
     Other: PipelineLayoutDesc,
 {
     /// Makes sure that `self` is a superset of `Other`. Returns an `Err` if this is not the case.
-    fn ensure_superset_of(&self, &Other) -> Result<(), PipelineLayoutNotSupersetError>;
+    fn ensure_superset_of(&self, _: &Other) -> Result<(), PipelineLayoutNotSupersetError>;
 }
 
 unsafe impl<T: ?Sized, U: ?Sized> PipelineLayoutSuperset<U> for T
@@ -285,7 +285,7 @@ where
     Other: DescriptorSetsCollection,
 {
     /// Returns true if `Other` can be used with a pipeline that uses `self` as layout.
-    fn is_compatible(&self, &Other) -> bool;
+    fn is_compatible(&self, _: &Other) -> bool;
 }
 
 unsafe impl<T: ?Sized, U: ?Sized> PipelineLayoutSetsCompatible<U> for T
@@ -325,7 +325,7 @@ pub unsafe trait PipelineLayoutPushConstantsCompatible<Pc: ?Sized>:
     PipelineLayoutDesc
 {
     /// Returns true if `Pc` can be used with a pipeline that uses `self` as layout.
-    fn is_compatible(&self, &Pc) -> bool;
+    fn is_compatible(&self, _: &Pc) -> bool;
 }
 
 unsafe impl<T: ?Sized, U: ?Sized> PipelineLayoutPushConstantsCompatible<U> for T

@@ -7,7 +7,7 @@
 // notice may not be copied, modified, or distributed except
 // according to those terms.
 
-use vk;
+use crate::vk;
 
 macro_rules! features {
     ($($name:ident => $vk:ident,)+) => (

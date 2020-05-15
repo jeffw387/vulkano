@@ -11,15 +11,15 @@ use std::hash::Hash;
 use std::hash::Hasher;
 use std::ops::Range;
 
-use buffer::sys::UnsafeBuffer;
-use buffer::BufferSlice;
-use device::DeviceOwned;
-use device::Queue;
-use image::ImageAccess;
-use memory::Content;
-use sync::AccessError;
+use crate::buffer::sys::UnsafeBuffer;
+use crate::buffer::BufferSlice;
+use crate::device::DeviceOwned;
+use crate::device::Queue;
+use crate::image::ImageAccess;
+use crate::memory::Content;
+use crate::sync::AccessError;
 
-use SafeDeref;
+use crate::SafeDeref;
 
 /// Trait for objects that represent a way for the GPU to have access to a buffer or a slice of a
 /// buffer.

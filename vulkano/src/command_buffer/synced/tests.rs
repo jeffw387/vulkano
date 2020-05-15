@@ -9,13 +9,13 @@
 
 use std::iter;
 
-use buffer::BufferUsage;
-use buffer::CpuAccessibleBuffer;
-use command_buffer::synced::base::SyncCommandBufferBuilder;
-use command_buffer::synced::base::SyncCommandBufferBuilderError;
-use command_buffer::sys::Flags;
-use command_buffer::sys::Kind;
-use device::Device;
+use crate::buffer::BufferUsage;
+use crate::buffer::CpuAccessibleBuffer;
+use crate::command_buffer::synced::base::SyncCommandBufferBuilder;
+use crate::command_buffer::synced::base::SyncCommandBufferBuilderError;
+use crate::command_buffer::sys::Flags;
+use crate::command_buffer::sys::Kind;
+use crate::device::Device;
 
 #[test]
 fn basic_creation() {

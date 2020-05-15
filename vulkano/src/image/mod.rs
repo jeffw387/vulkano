@@ -684,7 +684,7 @@ impl ImageDimensions {
 
 #[cfg(test)]
 mod tests {
-    use image::ImageDimensions;
+    use crate::image::ImageDimensions;
 
     #[test]
     fn max_mipmaps() {

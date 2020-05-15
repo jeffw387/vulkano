@@ -7,15 +7,15 @@
 // notice may not be copied, modified, or distributed except
 // according to those terms.
 
-use device::DeviceOwned;
-use format::ClearValue;
-use framebuffer::FramebufferSys;
-use framebuffer::RenderPassDesc;
-use framebuffer::RenderPassSys;
-use image::ImageViewAccess;
-use pipeline::shader::ShaderInterfaceDef;
+use crate::device::DeviceOwned;
+use crate::format::ClearValue;
+use crate::framebuffer::FramebufferSys;
+use crate::framebuffer::RenderPassDesc;
+use crate::framebuffer::RenderPassSys;
+use crate::image::ImageViewAccess;
+use crate::pipeline::shader::ShaderInterfaceDef;
 
-use SafeDeref;
+use crate::SafeDeref;
 
 /// Trait for objects that contain a Vulkan framebuffer object.
 ///
@@ -136,7 +136,7 @@ pub unsafe trait RenderPassDescClearValues<C> {
     /// that matches the attachment.
     ///
     // TODO: meh for boxing
-    fn convert_clear_values(&self, C) -> Box<dyn Iterator<Item = ClearValue>>;
+    fn convert_clear_values(&self, _: C) -> Box<dyn Iterator<Item = ClearValue>>;
 }
 
 unsafe impl<T, C> RenderPassDescClearValues<C> for T

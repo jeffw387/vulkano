@@ -10,25 +10,25 @@
 use std::hash::Hash;
 use std::hash::Hasher;
 
-use buffer::BufferAccess;
-use format::ClearValue;
-use format::Format;
-use format::PossibleCompressedFormatDesc;
-use format::PossibleDepthFormatDesc;
-use format::PossibleDepthStencilFormatDesc;
-use format::PossibleFloatFormatDesc;
-use format::PossibleSintFormatDesc;
-use format::PossibleStencilFormatDesc;
-use format::PossibleUintFormatDesc;
-use image::sys::UnsafeImage;
-use image::sys::UnsafeImageView;
-use image::Dimensions;
-use image::ImageDimensions;
-use image::ImageLayout;
-use sampler::Sampler;
-use sync::AccessError;
+use crate::buffer::BufferAccess;
+use crate::format::ClearValue;
+use crate::format::Format;
+use crate::format::PossibleCompressedFormatDesc;
+use crate::format::PossibleDepthFormatDesc;
+use crate::format::PossibleDepthStencilFormatDesc;
+use crate::format::PossibleFloatFormatDesc;
+use crate::format::PossibleSintFormatDesc;
+use crate::format::PossibleStencilFormatDesc;
+use crate::format::PossibleUintFormatDesc;
+use crate::image::sys::UnsafeImage;
+use crate::image::sys::UnsafeImageView;
+use crate::image::Dimensions;
+use crate::image::ImageDimensions;
+use crate::image::ImageLayout;
+use crate::sampler::Sampler;
+use crate::sync::AccessError;
 
-use SafeDeref;
+use crate::SafeDeref;
 
 /// Trait for types that represent the way a GPU can access an image.
 pub unsafe trait ImageAccess {
@@ -434,7 +434,7 @@ where
 /// given image.
 // TODO: isn't that for image views instead?
 pub unsafe trait ImageClearValue<T>: ImageAccess {
-    fn decode(&self, T) -> Option<ClearValue>;
+    fn decode(&self, _: T) -> Option<ClearValue>;
 }
 
 pub unsafe trait ImageContent<P>: ImageAccess {

@@ -34,31 +34,31 @@ use std::sync::RwLock;
 use std::sync::RwLockReadGuard;
 use std::sync::RwLockWriteGuard;
 
-use buffer::sys::BufferCreationError;
-use buffer::sys::SparseLevel;
-use buffer::sys::UnsafeBuffer;
-use buffer::traits::BufferAccess;
-use buffer::traits::BufferInner;
-use buffer::traits::TypedBufferAccess;
-use buffer::BufferUsage;
-use device::Device;
-use device::DeviceOwned;
-use device::Queue;
-use image::ImageAccess;
-use instance::QueueFamily;
-use memory::pool::AllocFromRequirementsFilter;
-use memory::pool::AllocLayout;
-use memory::pool::MappingRequirement;
-use memory::pool::MemoryPool;
-use memory::pool::MemoryPoolAlloc;
-use memory::pool::PotentialDedicatedAllocation;
-use memory::pool::StdMemoryPoolAlloc;
-use memory::Content;
-use memory::CpuAccess as MemCpuAccess;
-use memory::DedicatedAlloc;
-use memory::DeviceMemoryAllocError;
-use sync::AccessError;
-use sync::Sharing;
+use crate::buffer::sys::BufferCreationError;
+use crate::buffer::sys::SparseLevel;
+use crate::buffer::sys::UnsafeBuffer;
+use crate::buffer::traits::BufferAccess;
+use crate::buffer::traits::BufferInner;
+use crate::buffer::traits::TypedBufferAccess;
+use crate::buffer::BufferUsage;
+use crate::device::Device;
+use crate::device::DeviceOwned;
+use crate::device::Queue;
+use crate::image::ImageAccess;
+use crate::instance::QueueFamily;
+use crate::memory::pool::AllocFromRequirementsFilter;
+use crate::memory::pool::AllocLayout;
+use crate::memory::pool::MappingRequirement;
+use crate::memory::pool::MemoryPool;
+use crate::memory::pool::MemoryPoolAlloc;
+use crate::memory::pool::PotentialDedicatedAllocation;
+use crate::memory::pool::StdMemoryPoolAlloc;
+use crate::memory::Content;
+use crate::memory::CpuAccess as MemCpuAccess;
+use crate::memory::DedicatedAlloc;
+use crate::memory::DeviceMemoryAllocError;
+use crate::sync::AccessError;
+use crate::sync::Sharing;
 
 /// Buffer whose content is accessible by the CPU.
 ///
@@ -645,7 +645,7 @@ impl fmt::Display for WriteLockError {
 
 #[cfg(test)]
 mod tests {
-    use buffer::{BufferUsage, CpuAccessibleBuffer};
+    use crate::buffer::{BufferUsage, CpuAccessibleBuffer};
 
     #[test]
     fn create_empty_buffer() {

@@ -17,16 +17,16 @@ use std::os::raw::c_void;
 use std::ptr;
 use std::sync::Arc;
 
-use check_errors;
-use device::Device;
-use device::DeviceOwned;
-use instance::MemoryType;
-use memory::Content;
-use memory::DedicatedAlloc;
-use vk;
-use Error;
-use OomError;
-use VulkanObject;
+use crate::check_errors;
+use crate::device::Device;
+use crate::device::DeviceOwned;
+use crate::instance::MemoryType;
+use crate::memory::Content;
+use crate::memory::DedicatedAlloc;
+use crate::vk;
+use crate::Error;
+use crate::OomError;
+use crate::VulkanObject;
 
 /// Represents memory that has been allocated.
 ///
@@ -529,9 +529,9 @@ impl From<OomError> for DeviceMemoryAllocError {
 
 #[cfg(test)]
 mod tests {
-    use memory::DeviceMemory;
-    use memory::DeviceMemoryAllocError;
-    use OomError;
+    use crate::memory::DeviceMemory;
+    use crate::memory::DeviceMemoryAllocError;
+    use crate::OomError;
 
     #[test]
     fn create() {

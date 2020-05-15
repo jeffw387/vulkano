@@ -13,13 +13,13 @@ use std::fmt;
 use std::ptr;
 use std::vec::IntoIter;
 
-use check_errors;
-use instance::loader;
-use instance::loader::LoadingError;
-use version::Version;
-use vk;
-use Error;
-use OomError;
+use crate::check_errors;
+use crate::instance::loader;
+use crate::instance::loader::LoadingError;
+use crate::version::Version;
+use crate::vk;
+use crate::Error;
+use crate::OomError;
 
 /// Queries the list of layers that are available when creating an instance.
 ///
@@ -59,7 +59,7 @@ where
         let entry_points = ptrs.entry_points();
 
         let mut num = 0;
-        check_errors({ entry_points.EnumerateInstanceLayerProperties(&mut num, ptr::null_mut()) })?;
+        check_errors( entry_points.EnumerateInstanceLayerProperties(&mut num, ptr::null_mut()) )?;
 
         let mut layers: Vec<vk::LayerProperties> = Vec::with_capacity(num as usize);
         check_errors({
@@ -240,7 +240,7 @@ impl ExactSizeIterator for LayersIterator {}
 
 #[cfg(test)]
 mod tests {
-    use instance;
+    use crate::instance;
 
     #[test]
     fn layers_list() {

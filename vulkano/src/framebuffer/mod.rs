@@ -117,7 +117,7 @@ pub use self::traits::RenderPassDescClearValues;
 pub use self::traits::RenderPassSubpassInterface;
 pub use self::traits::Subpass;
 
-use vk;
+use crate::vk;
 
 #[macro_use]
 mod macros;

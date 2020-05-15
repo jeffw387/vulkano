@@ -11,6 +11,7 @@ keywords = ["vulkan", "bindings", "graphics", "gpu", "rendering"]
 categories = ["rendering::graphics-api"]
 readme = "../README.md"
 build = "build.rs"
+edition = "2018"
 
 [dependencies]
 crossbeam = "0.7"

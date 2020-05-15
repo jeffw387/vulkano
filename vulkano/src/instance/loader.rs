@@ -30,8 +30,8 @@ use std::os::raw::c_char;
 use std::os::raw::c_void;
 use std::path::Path;
 
-use vk;
-use SafeDeref;
+use crate::vk;
+use crate::SafeDeref;
 
 /// Implemented on objects that grant access to a Vulkan implementation.
 pub unsafe trait Loader {
@@ -225,7 +225,7 @@ pub fn auto_loader(
 
     lazy_static! {
         static ref DEFAULT_LOADER: Result<FunctionPointers<Box<dyn Loader + Send + Sync>>, LoadingError> =
-            { def_loader_impl().map(FunctionPointers::new) };
+             def_loader_impl().map(FunctionPointers::new) ;
     }
 
     match DEFAULT_LOADER.deref() {
@@ -269,8 +269,8 @@ impl fmt::Display for LoadingError {
 
 #[cfg(test)]
 mod tests {
-    use instance::loader::DynamicLibraryLoader;
-    use instance::loader::LoadingError;
+    use crate::instance::loader::DynamicLibraryLoader;
+    use crate::instance::loader::LoadingError;
 
     #[test]
     fn dl_open_error() {
