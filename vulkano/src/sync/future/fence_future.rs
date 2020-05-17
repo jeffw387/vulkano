@@ -45,7 +45,7 @@ mod tests {
         sync::Arc,
         boxed::Box,
     };
-    use vulkano::{
+    use crate::{
         device::{Device, DeviceCreationError},
         instance::{Instance, InstanceCreationError, InstanceExtensions},
         sync::Fence,
@@ -97,11 +97,11 @@ mod tests {
             ..InstanceExtensions::none()
         };
         let instance = Instance::new(None, &instance_extensions, layers).map_err(Error::from)?;
-        let phys = vulkano::instance::PhysicalDevice::enumerate(&instance)
+        let phys = crate::instance::PhysicalDevice::enumerate(&instance)
             .next()
             .ok_or(Error::NoPhysicalDeviceFound)?;
-        let requested_features = vulkano::device::Features::none();
-        let extensions = vulkano::device::DeviceExtensions::none();
+        let requested_features = crate::device::Features::none();
+        let extensions = crate::device::DeviceExtensions::none();
         let queue_family = phys
             .queue_families()
             .next()
@@ -113,7 +113,7 @@ mod tests {
             Some((queue_family, 1.0)),
         )
         .map_err(Error::from)?;
-        let fence = vulkano::sync::Fence::alloc_signaled(device.clone()).map_err(Error::from)?;
+        let fence = crate::sync::Fence::alloc_signaled(device.clone()).map_err(Error::from)?;
         FenceFuture::new(fence, ())
             .await
             .map_err(Error::from)
