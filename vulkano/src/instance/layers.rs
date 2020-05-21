@@ -59,7 +59,7 @@ where
         let entry_points = ptrs.entry_points();
 
         let mut num = 0;
-        check_errors( entry_points.EnumerateInstanceLayerProperties(&mut num, ptr::null_mut()) )?;
+        check_errors(entry_points.EnumerateInstanceLayerProperties(&mut num, ptr::null_mut()))?;
 
         let mut layers: Vec<vk::LayerProperties> = Vec::with_capacity(num as usize);
         check_errors({
@@ -184,10 +184,14 @@ impl error::Error for LayersListError {
 impl fmt::Display for LayersListError {
     #[inline]
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(fmt, "{}", match *self {
-            LayersListError::LoadingError(_) => "failed to load the Vulkan shared library",
-            LayersListError::OomError(_) => "not enough memory available",
-        })
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                LayersListError::LoadingError(_) => "failed to load the Vulkan shared library",
+                LayersListError::OomError(_) => "not enough memory available",
+            }
+        )
     }
 }
 

@@ -442,18 +442,22 @@ impl error::Error for BufferCreationError {
 impl fmt::Display for BufferCreationError {
     #[inline]
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(fmt, "{}", match *self {
-            BufferCreationError::AllocError(_) => "allocating memory failed",
-            BufferCreationError::SparseBindingFeatureNotEnabled => {
-                "sparse binding was requested but the corresponding feature wasn't enabled"
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                BufferCreationError::AllocError(_) => "allocating memory failed",
+                BufferCreationError::SparseBindingFeatureNotEnabled => {
+                    "sparse binding was requested but the corresponding feature wasn't enabled"
+                }
+                BufferCreationError::SparseResidencyBufferFeatureNotEnabled => {
+                    "sparse residency was requested but the corresponding feature wasn't enabled"
+                }
+                BufferCreationError::SparseResidencyAliasedFeatureNotEnabled => {
+                    "sparse aliasing was requested but the corresponding feature wasn't enabled"
+                }
             }
-            BufferCreationError::SparseResidencyBufferFeatureNotEnabled => {
-                "sparse residency was requested but the corresponding feature wasn't enabled"
-            }
-            BufferCreationError::SparseResidencyAliasedFeatureNotEnabled => {
-                "sparse aliasing was requested but the corresponding feature wasn't enabled"
-            }
-        })
+        )
     }
 }
 

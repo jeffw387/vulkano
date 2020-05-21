@@ -337,15 +337,19 @@ impl error::Error for ComputePipelineCreationError {
 impl fmt::Display for ComputePipelineCreationError {
     #[inline]
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(fmt, "{}", match *self {
-            ComputePipelineCreationError::OomError(_) => "not enough memory available",
-            ComputePipelineCreationError::PipelineLayoutCreationError(_) => {
-                "error while creating the pipeline layout object"
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                ComputePipelineCreationError::OomError(_) => "not enough memory available",
+                ComputePipelineCreationError::PipelineLayoutCreationError(_) => {
+                    "error while creating the pipeline layout object"
+                }
+                ComputePipelineCreationError::IncompatiblePipelineLayout(_) => {
+                    "the pipeline layout is not compatible with what the shader expects"
+                }
             }
-            ComputePipelineCreationError::IncompatiblePipelineLayout(_) => {
-                "the pipeline layout is not compatible with what the shader expects"
-            }
-        })
+        )
     }
 }
 
@@ -402,10 +406,10 @@ mod tests {
     use crate::pipeline::shader::SpecializationConstants;
     use crate::pipeline::shader::SpecializationMapEntry;
     use crate::pipeline::ComputePipeline;
-    use std::ffi::CStr;
-    use std::sync::Arc;
     use crate::sync::now;
     use crate::sync::GpuFuture;
+    use std::ffi::CStr;
+    use std::sync::Arc;
 
     // TODO: test for basic creation
     // TODO: test for pipeline layout error

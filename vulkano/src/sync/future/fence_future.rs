@@ -1,10 +1,10 @@
+use crate::{device::Device, sync::Fence, OomError, SafeDeref};
 use std::{
     future::Future,
     pin::Pin,
     sync::{Arc, Mutex},
     task::{Context, Poll},
 };
-use crate::{device::Device, sync::Fence, OomError, SafeDeref};
 
 pub struct FenceFuture<T> {
     output: Arc<Mutex<Option<T>>>,
@@ -40,17 +40,12 @@ impl<T> Future for FenceFuture<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{
-        fmt::{Debug, Display},
-        sync::Arc,
-        boxed::Box,
-    };
     use crate::{
         device::{Device, DeviceCreationError},
         instance::{Instance, InstanceCreationError, InstanceExtensions},
-        sync::Fence,
         OomError,
     };
+    use std::fmt::{Debug, Display};
 
     #[derive(Debug)]
     enum Error {
@@ -114,9 +109,7 @@ mod tests {
         )
         .map_err(Error::from)?;
         let fence = crate::sync::Fence::alloc_signaled(device.clone()).map_err(Error::from)?;
-        FenceFuture::new(fence, ())
-            .await
-            .map_err(Error::from)
+        FenceFuture::new(fence, ()).await.map_err(Error::from)
     }
 
     #[tokio::test]

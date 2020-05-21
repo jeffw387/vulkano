@@ -49,13 +49,13 @@ use crate::query::QueryPipelineStatisticFlags;
 use crate::query::UnsafeQueriesRange;
 use crate::query::UnsafeQuery;
 use crate::sampler::Filter;
-use std::ffi::CStr;
 use crate::sync::AccessFlagBits;
 use crate::sync::Event;
 use crate::sync::PipelineStages;
 use crate::vk;
 use crate::OomError;
 use crate::VulkanObject;
+use std::ffi::CStr;
 
 /// Determines the kind of command buffer that we want to create.
 #[derive(Debug, Clone)]

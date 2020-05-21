@@ -225,7 +225,7 @@ pub fn auto_loader(
 
     lazy_static! {
         static ref DEFAULT_LOADER: Result<FunctionPointers<Box<dyn Loader + Send + Sync>>, LoadingError> =
-             def_loader_impl().map(FunctionPointers::new) ;
+            def_loader_impl().map(FunctionPointers::new);
     }
 
     match DEFAULT_LOADER.deref() {
@@ -257,13 +257,17 @@ impl error::Error for LoadingError {
 impl fmt::Display for LoadingError {
     #[inline]
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(fmt, "{}", match *self {
-            LoadingError::LibraryLoadFailure(_) => "failed to load the Vulkan shared library",
-            LoadingError::MissingEntryPoint(_) => {
-                "one of the entry points required to be supported by the Vulkan implementation \
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                LoadingError::LibraryLoadFailure(_) => "failed to load the Vulkan shared library",
+                LoadingError::MissingEntryPoint(_) => {
+                    "one of the entry points required to be supported by the Vulkan implementation \
                  is missing"
+                }
             }
-        })
+        )
     }
 }
 

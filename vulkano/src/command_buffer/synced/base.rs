@@ -33,13 +33,13 @@ use crate::framebuffer::FramebufferAbstract;
 use crate::framebuffer::RenderPassAbstract;
 use crate::image::ImageAccess;
 use crate::image::ImageLayout;
-use std::cell::RefCell;
 use crate::sync::AccessCheckError;
 use crate::sync::AccessError;
 use crate::sync::AccessFlagBits;
 use crate::sync::GpuFuture;
 use crate::sync::PipelineStages;
 use crate::OomError;
+use std::cell::RefCell;
 
 /// Wrapper around `UnsafeCommandBufferBuilder` that handles synchronization for you.
 ///
@@ -160,9 +160,13 @@ impl error::Error for SyncCommandBufferBuilderError {}
 impl fmt::Display for SyncCommandBufferBuilderError {
     #[inline]
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(fmt, "{}", match *self {
-            SyncCommandBufferBuilderError::Conflict { .. } => "unsolvable conflict",
-        })
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                SyncCommandBufferBuilderError::Conflict { .. } => "unsolvable conflict",
+            }
+        )
     }
 }
 

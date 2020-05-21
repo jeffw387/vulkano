@@ -140,8 +140,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::format::Format;
     use crate::command_buffer::validity::copy_image_buffer::required_len_for_format;
+    use crate::format::Format;
 
     #[test]
     fn test_required_len_for_format() {
@@ -222,29 +222,33 @@ impl error::Error for CheckCopyBufferImageError {
 impl fmt::Display for CheckCopyBufferImageError {
     #[inline]
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(fmt, "{}", match *self {
-            CheckCopyBufferImageError::SourceMissingTransferUsage => {
-                "the source buffer is missing the transfer source usage"
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                CheckCopyBufferImageError::SourceMissingTransferUsage => {
+                    "the source buffer is missing the transfer source usage"
+                }
+                CheckCopyBufferImageError::DestinationMissingTransferUsage => {
+                    "the destination buffer is missing the transfer destination usage"
+                }
+                CheckCopyBufferImageError::OverlappingRanges => {
+                    "the source and destination are overlapping"
+                }
+                CheckCopyBufferImageError::UnexpectedMultisampled => {
+                    "the image must not be multisampled"
+                }
+                CheckCopyBufferImageError::ImageCoordinatesOutOfRange => {
+                    "the image coordinates are out of range"
+                }
+                CheckCopyBufferImageError::WrongPixelType(_) => {
+                    "the type of pixels in the buffer isn't compatible with the image format"
+                }
+                CheckCopyBufferImageError::BufferTooSmall { .. } => {
+                    "the buffer is too small for the copy operation"
+                }
             }
-            CheckCopyBufferImageError::DestinationMissingTransferUsage => {
-                "the destination buffer is missing the transfer destination usage"
-            }
-            CheckCopyBufferImageError::OverlappingRanges => {
-                "the source and destination are overlapping"
-            }
-            CheckCopyBufferImageError::UnexpectedMultisampled => {
-                "the image must not be multisampled"
-            }
-            CheckCopyBufferImageError::ImageCoordinatesOutOfRange => {
-                "the image coordinates are out of range"
-            }
-            CheckCopyBufferImageError::WrongPixelType(_) => {
-                "the type of pixels in the buffer isn't compatible with the image format"
-            }
-            CheckCopyBufferImageError::BufferTooSmall { .. } => {
-                "the buffer is too small for the copy operation"
-            }
-        })
+        )
     }
 }
 

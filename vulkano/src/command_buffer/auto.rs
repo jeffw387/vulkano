@@ -1999,36 +1999,40 @@ impl error::Error for AutoCommandBufferBuilderContextError {}
 impl fmt::Display for AutoCommandBufferBuilderContextError {
     #[inline]
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(fmt, "{}", match *self {
-            AutoCommandBufferBuilderContextError::ForbiddenInSecondary => {
-                "operation forbidden in a secondary command buffer"
-            }
-            AutoCommandBufferBuilderContextError::ForbiddenInsideRenderPass => {
-                "operation forbidden inside of a render pass"
-            }
-            AutoCommandBufferBuilderContextError::ForbiddenOutsideRenderPass => {
-                "operation forbidden outside of a render pass"
-            }
-            AutoCommandBufferBuilderContextError::NotSupportedByQueueFamily => {
-                "the queue family doesn't allow this operation"
-            }
-            AutoCommandBufferBuilderContextError::NumSubpassesMismatch { .. } => {
-                "tried to end a render pass with subpasses remaining, or tried to go to next \
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                AutoCommandBufferBuilderContextError::ForbiddenInSecondary => {
+                    "operation forbidden in a secondary command buffer"
+                }
+                AutoCommandBufferBuilderContextError::ForbiddenInsideRenderPass => {
+                    "operation forbidden inside of a render pass"
+                }
+                AutoCommandBufferBuilderContextError::ForbiddenOutsideRenderPass => {
+                    "operation forbidden outside of a render pass"
+                }
+                AutoCommandBufferBuilderContextError::NotSupportedByQueueFamily => {
+                    "the queue family doesn't allow this operation"
+                }
+                AutoCommandBufferBuilderContextError::NumSubpassesMismatch { .. } => {
+                    "tried to end a render pass with subpasses remaining, or tried to go to next \
                  subpass with no subpass remaining"
-            }
-            AutoCommandBufferBuilderContextError::WrongSubpassType => {
-                "tried to execute a secondary command buffer inside a subpass that only allows \
+                }
+                AutoCommandBufferBuilderContextError::WrongSubpassType => {
+                    "tried to execute a secondary command buffer inside a subpass that only allows \
                  inline commands, or a draw command in a subpass that only allows secondary \
                  command buffers"
-            }
-            AutoCommandBufferBuilderContextError::WrongSubpassIndex => {
-                "tried to use a graphics pipeline whose subpass index didn't match the current \
+                }
+                AutoCommandBufferBuilderContextError::WrongSubpassIndex => {
+                    "tried to use a graphics pipeline whose subpass index didn't match the current \
                  subpass index"
-            }
-            AutoCommandBufferBuilderContextError::IncompatibleRenderPass => {
-                "tried to use a graphics pipeline whose render pass is incompatible with the \
+                }
+                AutoCommandBufferBuilderContextError::IncompatibleRenderPass => {
+                    "tried to use a graphics pipeline whose render pass is incompatible with the \
                  current render pass"
+                }
             }
-        })
+        )
     }
 }

@@ -101,6 +101,7 @@ use crate::pipeline::depth_stencil::DynamicStencilValue;
 use crate::pipeline::viewport::Scissor;
 use crate::pipeline::viewport::Viewport;
 
+pub mod cb;
 pub mod pool;
 pub mod submit;
 pub mod synced;
