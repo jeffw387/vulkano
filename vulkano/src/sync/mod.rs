@@ -109,6 +109,7 @@ use std::sync::Arc;
 pub use self::event::Event;
 pub use self::fence::Fence;
 pub use self::fence::FenceWaitError;
+pub use self::future::fence_future::FenceFuture;
 pub use self::future::now;
 pub use self::future::AccessCheckError;
 pub use self::future::AccessError;

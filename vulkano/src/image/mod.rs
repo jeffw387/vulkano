@@ -62,6 +62,7 @@ pub use self::usage::ImageUsage;
 
 pub mod attachment; // TODO: make private
 pub mod immutable; // TODO: make private
+pub mod immutable2;
 mod layout;
 mod storage;
 pub mod swapchain; // TODO: make private

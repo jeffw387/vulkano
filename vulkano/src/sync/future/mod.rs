@@ -37,7 +37,7 @@ pub use self::join::JoinFuture;
 pub use self::now::{now, NowFuture};
 pub use self::semaphore_signal::SemaphoreSignalFuture;
 
-mod fence_future;
+pub(crate) mod fence_future;
 mod fence_signal;
 mod join;
 mod now;
