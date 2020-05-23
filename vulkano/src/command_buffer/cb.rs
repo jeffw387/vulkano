@@ -1,13 +1,14 @@
 use super::pool::standard::{StandardCommandPool, StandardCommandPoolBuilder};
-use super::sys::{Flags, Kind, UnsafeCommandBuffer, UnsafeCommandBufferBuilder};
+use super::sys::{Flags, Kind, UnsafeCommandBuffer, UnsafeCommandBufferBuilder, UnsafeCommandBufferBuilderBufferImageCopy, UnsafeCommandBufferBuilderImageAspect};
 use crate::device::Queue;
 use crate::{
-    buffer::{BufferUsage, CpuAccessibleBuffer},
+    buffer::{BufferUsage, CpuAccessibleBuffer, BufferAccess},
     device::Device,
     format::FormatDesc,
-    image::{immutable2::ImmutableImage, Dimensions},
+    image::{immutable2::ImmutableImage, Dimensions, MipmapsCount, ImageUsage, ImageLayout, ImageAccess},
     memory::DeviceMemoryAllocError,
     sync::FenceFuture,
+    format::{PossibleDepthFormatDesc, PossibleStencilFormatDesc},
     OomError,
 };
 use std::fmt::Display;
@@ -59,88 +60,8 @@ where
     }
 }
 
-pub struct TextureUploadBuilder<F> {
-    queue: Arc<Queue>,
-    inner: UnsafeCommandBufferBuilder<StandardCommandPoolBuilder>,
-    dimensions: Option<Dimensions>,
-    format: Option<F>,
-}
 
-impl<F> TextureUploadBuilder<F> {
-    pub fn new<P>(queue: Arc<Queue>) -> Result<Self, OomError> {
-        unsafe {
-            Ok(Self {
-                queue: queue.clone(),
-                inner: UnsafeCommandBufferBuilder::new(
-                    &Device::standard_command_pool(queue.device(), queue.family()),
-                    Kind::primary(),
-                    Flags::OneTimeSubmit,
-                )?,
-                dimensions: None,
-                format: None,
-            })
-        }
-    }
 
-    pub fn dimensions(&mut self, dimensions: Dimensions) {
-        self.dimensions = Some(dimensions);
-    }
-
-    pub fn format(&mut self, format: F)
-    where
-        F: FormatDesc,
-    {
-        self.format = Some(format);
-    }
-
-    pub fn build_from_iter<P, I>(&mut self, iter: I) -> TextureUpload
-    where
-        P: Send + Sync + Clone + 'static,
-        I: ExactSizeIterator<Item = P>,
-    {
-        let staging = self.stage(iter);
-        self.build_from_buffer();
-        unimplemented!()
-    }
-
-    pub fn build_from_buffer<B>(&mut self, buffer: B) -> TextureUpload {
-        let image = ImmutableImage::uninitialized(
-            self.queue.device(),
-            self.dimensions,
-            self.format,
-            MipmapsCount::One,
-            ImageUsage {
-                transfer_destination: true,
-                sampled: true,
-                ..ImageUsage::default()
-            },
-            ImageLayout::TransferDstOptimal,
-            [queue.clone()],
-        );
-        self.inner.copy_buffer_to_image(
-            staging.clone(),
-            image.clone(),
-            ImageLayout::TransferDstOptimal,
-            &[region].iter(),
-        );
-
-        unimplemented!()
-    }
-
-    fn stage<P, I>(&mut self, iter: I) -> Result<Arc<CpuAccessibleBuffer<[P]>>, Error>
-    where
-        P: Send + Sync + Clone + 'static,
-        I: ExactSizeIterator<Item = P>,
-    {
-        CpuAccessibleBuffer::from_iter(
-            self.queue.device().clone(),
-            BufferUsage::transfer_source(),
-            false,
-            iter,
-        )
-        .map_err(Error::from)
-    }
-}
 
 #[cfg(test)]
 mod tests {

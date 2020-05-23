@@ -18,15 +18,12 @@ use crate::buffer::BufferAccess;
 use crate::buffer::BufferUsage;
 use crate::buffer::CpuAccessibleBuffer;
 use crate::buffer::TypedBufferAccess;
-use crate::command_buffer::AutoCommandBuffer;
-use crate::command_buffer::AutoCommandBufferBuilder;
-use crate::command_buffer::CommandBuffer;
-use crate::command_buffer::CommandBufferExecFuture;
 use crate::device::Device;
 use crate::device::Queue;
 use crate::format::AcceptsPixels;
 use crate::format::Format;
 use crate::format::FormatDesc;
+use crate::format::{PossibleDepthFormatDesc, PossibleStencilFormatDesc};
 use crate::image::sys::ImageCreationError;
 use crate::image::sys::UnsafeImage;
 use crate::image::sys::UnsafeImageView;
@@ -50,6 +47,8 @@ use crate::memory::DedicatedAlloc;
 use crate::sync::AccessError;
 use crate::sync::NowFuture;
 use crate::sync::Sharing;
+use crate::command_buffer::cb::TextureUpload;
+use crate::command_buffer::sys::{UnsafeCommandBufferBuilder, Kind, Flags, UnsafeCommandBufferBuilderImageAspect, UnsafeCommandBufferBuilderBufferImageCopy};
 
 /// Image whose purpose is to be used for read-only purposes. You can write to the image once,
 /// but then you must only ever read from it.
@@ -65,7 +64,7 @@ pub struct ImmutableImage<F, A = PotentialDedicatedAllocation<StdMemoryPoolAlloc
     layout: ImageLayout,
 }
 
-impl<F> ImmutableImage<F> {
+impl<F: PossibleDepthFormatDesc + PossibleStencilFormatDesc> ImmutableImage<F> {
     /// Builds an uninitialized immutable image.
     pub fn uninitialized<'a, I, M>(
         device: Arc<Device>,
@@ -157,10 +156,7 @@ impl<F> ImmutableImage<F> {
         format: F,
         queue: Arc<Queue>,
     ) -> Result<
-        (
-            Arc<Self>,
-            CommandBufferExecFuture<NowFuture, AutoCommandBuffer>,
-        ),
+        TextureUpload,
         ImageCreationError,
     >
     where
@@ -175,6 +171,7 @@ impl<F> ImmutableImage<F> {
             false,
             iter,
         )?;
+
         ImmutableImage::from_buffer(source, dimensions, format, queue)
     }
 
@@ -186,14 +183,8 @@ impl<F> ImmutableImage<F> {
         dimensions: Dimensions,
         format: F,
         queue: Arc<Queue>,
-    ) -> Result<
-        (
-            Arc<Self>,
-            CommandBufferExecFuture<NowFuture, AutoCommandBuffer>,
-        ),
-        ImageCreationError,
-    >
-    where
+    ) -> Result<TextureUpload, ImageCreationError>
+where
         B: BufferAccess + TypedBufferAccess<Content = [P]> + 'static + Clone + Send + Sync,
         P: Send + Sync + Clone + 'static,
         F: FormatDesc + AcceptsPixels<P> + 'static + Send + Sync,
@@ -205,7 +196,7 @@ impl<F> ImmutableImage<F> {
             ..ImageUsage::none()
         };
         let layout = ImageLayout::ShaderReadOnlyOptimal;
-
+        
         let buffer = ImmutableImage::uninitialized(
             source.device().clone(),
             dimensions,
@@ -215,31 +206,47 @@ impl<F> ImmutableImage<F> {
             layout,
             source.device().active_queue_families(),
         )?;
-
-        let cb = crate::command_buffer::cb::TextureUploadBuilder::new(queue.clone())?
-            .dimensions(dimensions)
-            .format(format)
-            .build(iter);
-        let cb = AutoCommandBufferBuilder::new(source.device().clone(), queue.family())?
-            .copy_buffer_to_image_dimensions(
-                source,
-                init,
-                [0, 0, 0],
-                dimensions.width_height_depth(),
-                0,
-                dimensions.array_layers_with_cube(),
-                0,
-            )
-            .unwrap()
-            .build()
-            .unwrap();
-
-        let future = match cb.execute(queue) {
-            Ok(f) => f,
-            Err(_) => unreachable!(),
+        let image = ImmutableImage::uninitialized(
+            queue.device().clone(),
+            dimensions,
+            format,
+            MipmapsCount::One,
+            ImageUsage {
+                transfer_destination: true,
+                sampled: true,
+                ..ImageUsage::none()
+            },
+            ImageLayout::TransferDstOptimal,
+            vec![queue.clone()],
+        );
+        let cb = unsafe {
+                UnsafeCommandBufferBuilder::new(
+                    &Device::standard_command_pool(queue.device(), queue.family()),
+                    Kind::primary(),
+                    Flags::OneTimeSubmit,
+                )?
         };
-
-        Ok((buffer, future))
+        let region = UnsafeCommandBufferBuilderBufferImageCopy {
+              buffer_offset: 0,
+              buffer_row_length: dimensions.width(),
+              buffer_image_height: dimensions.height(),
+              image_aspect: UnsafeCommandBufferBuilderImageAspect {
+                  color: !format.is_depth() && !format.is_stencil(),
+                  depth: format.is_depth(),
+                  stencil: format.is_stencil(),
+              },
+              image_mip_level: 1,
+              image_base_array_layer: 0,
+              image_layer_count: 1,
+              image_offset: [0, 0, 0],
+              image_extent: [dimensions.width(), dimensions.height(), 1]
+          };
+          cb.copy_buffer_to_image(
+              &buffer,
+              &image,
+              ImageLayout::TransferDstOptimal,
+              [region].iter(),
+          ); 
     }
 }
 
